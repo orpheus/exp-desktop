@@ -1,7 +1,10 @@
 import React, { Suspense, ReactElement } from 'react'
+import ExpThemeProvider from './ThemeProvider'
 
 
-const Providers: IProviders = []
+const Providers: IProviders = [
+  ExpThemeProvider
+]
 
 const AllProviders = ({ Providers, children }: AllProvidersProps) => {
   const Provider = Providers.shift()
@@ -18,10 +21,10 @@ export default function RootProvider ({ children }: RootProviderProps) {
   </ Suspense>
 }
 
-type IProvider = ({ children }: ProviderProps) => JSX.Element
+export type IProvider = ({ children }: IProviderProps) => JSX.Element
 type IProviders = IProvider[]
 
-interface ProviderProps {
+export interface IProviderProps {
   children: ReactElement | ReactElement[]
 }
 

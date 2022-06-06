@@ -1,5 +1,6 @@
 import React from 'react'
+import HomePage from './pages/HomePage/HomePage'
 
 export default function App () {
-  return <h1>EXP</h1>
+  return <HomePage />
 }
