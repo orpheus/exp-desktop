@@ -6,13 +6,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.0.1] - 2022-06-05
+### [2022-06-05]
 ### Added
 - react + typeScript support
 - WelcomeRegisterBox component
 - react-jss & theme support
 - RootProvider & ThemeProvider typed with ts
-- 
+
+### [2022-06-08]
+### Added
+- AxiosApi and ApiMutationFactory
+
 
 [Unreleased]: https://github.com/olivierlacan/keep-a-changelog/compare/v1.0.0...HEAD
 [0.0.1]: https://github.com/olivierlacan/keep-a-changelog/releases/tag/v0.0.1

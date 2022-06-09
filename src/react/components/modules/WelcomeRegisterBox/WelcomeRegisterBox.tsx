@@ -3,12 +3,12 @@ import styles from './styles'
 
 const WelcomeRegisterBox = ({
   title,
-  onRegisterSuccess
+  onValidRegistration
 }: Props) => {
   const c = styles()
 
   const [email, setEmail] = useState('')
-  const [pass, setPass] = useState('')
+  const [password, setPassword] = useState('')
   const [validInput, setValidInput] = useState(false)
 
   function handleEmailChange (e: React.ChangeEvent<HTMLInputElement>) {
@@ -16,7 +16,7 @@ const WelcomeRegisterBox = ({
   }
 
   function handlePassChange (e: React.ChangeEvent<HTMLInputElement>) {
-    setPass(e.currentTarget.value)
+    setPassword(e.currentTarget.value)
   }
 
   function validateInput () {
@@ -24,24 +24,18 @@ const WelcomeRegisterBox = ({
     return true
   }
 
-  async function registerUser () {
-    // TODO:
-    onRegisterSuccess()
-  }
-
   async function handleEnter (e: KeyboardEvent) {
     if (e.key === 'Enter') {
-      await handleSubmit()
+      await handleRegister()
     }
   }
 
-  async function handleSubmit () {
+  async function handleRegister () {
     if (!validateInput()) {
       // TODO: Error message or animation
       return
     }
-    console.log('Register User..')
-    await registerUser()
+    await onValidRegistration({ email, password })
   }
 
   useEffect(() => {
@@ -53,9 +47,9 @@ const WelcomeRegisterBox = ({
   }, [])
 
   useEffect(() => {
-    const valid = Boolean(email && pass)
+    const valid = Boolean(email && password)
     setValidInput(valid)
-  }, [email, pass])
+  }, [email, password])
 
   return <div className={c.root}>
     <div className={c.container}>
@@ -68,11 +62,11 @@ const WelcomeRegisterBox = ({
       </div>
       <div className={c.inputBoxContainer}>
         <label className={c.inputLabel}>password: </label>
-        <input className={c.input} type={'password'} onChange={handlePassChange} value={pass}/>
+        <input className={c.input} type={'password'} onChange={handlePassChange} value={password}/>
       </div>
       {validInput &&
         <div className={c.inputBoxContainer}>
-          <button className={c.submitButton} onClick={handleSubmit}>
+          <button className={c.submitButton} onClick={handleRegister}>
             SUBMIT
           </button>
         </div>
@@ -85,8 +79,13 @@ const WelcomeRegisterBox = ({
 export default WelcomeRegisterBox
 
 interface Props {
-  onRegisterSuccess: () => boolean
+  onValidRegistration: (registrationData: RegistrationData) => void
   title: string
+}
+
+export interface RegistrationData {
+  email: string,
+  password: string
 }
 
 WelcomeRegisterBox.defaultProps = {

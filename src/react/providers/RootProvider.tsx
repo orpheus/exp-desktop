@@ -1,8 +1,10 @@
 import React, { Suspense, ReactElement } from 'react'
 import ExpThemeProvider from './ThemeProvider'
+import ReactQueryProvider from './ReactQueryProvider'
 
 
 const Providers: IProviders = [
+  ReactQueryProvider,
   ExpThemeProvider
 ]
 
