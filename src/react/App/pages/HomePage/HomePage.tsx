@@ -1,7 +1,12 @@
 import React from 'react'
 import styles from './styles'
-import WelcomeRegisterBox, { RegistrationData } from '../../../components/modules/WelcomeRegisterBox/WelcomeRegisterBox'
-import { loginApiMutation, signUpApiMutation } from '../../../apis/signon'
+import {
+  RegistrationData,
+  signUpApiMutation,
+} from '../../../apis/signon/signup'
+import WelcomeRegisterBox
+  from '../../../components/modules/WelcomeRegisterBox/WelcomeRegisterBox'
+import { loginApiMutation } from '../../../apis/signon/login'
 
 const HomePage = () => {
   const c = styles()
@@ -10,10 +15,10 @@ const HomePage = () => {
 
   async function registerNewUser ({ email, password }: RegistrationData) {
     await signUpApi.call({
-      data: { email, password }
+      data: { email, password },
     }, {
-      onSuccess: data => null,
-      onError: error => null
+      onSuccess: async data => null,
+      onError: async error => null,
     })
   }
 
@@ -22,7 +27,6 @@ const HomePage = () => {
 
   </div>
 }
-
 
 export default HomePage
 

@@ -1,27 +1,31 @@
-import AxiosApi, { IAxiosApi, ICallArgs } from './AxiosApi'
-import { MutateOptions, MutationFunction, useMutation, UseMutationOptions, UseMutationResult } from 'react-query'
+import AxiosApi, { IAxiosApi, IAxiosArgs } from './AxiosApi'
+import {
+  MutateOptions,
+  MutationFunction,
+  useMutation,
+  UseMutationOptions,
+  UseMutationResult,
+} from 'react-query'
 
-class ApiMutationFactory extends AxiosApi {
-  mutation: UseMutationResult
-
+class ApiMutationFactory<T extends IAxiosArgs> extends AxiosApi {
   constructor (IAxiosApi: IAxiosApi) {
     super(IAxiosApi)
   }
 
   make (options?: UseMutationOptions) {
-    return new ApiMutation(
-      useMutation(this.call as MutationFunction, options)
+    return new this.ApiMutation<T>(
+      useMutation(this.call as MutationFunction, options),
     )
   }
-}
 
-class ApiMutation {
-  constructor (
-    public mutation: UseMutationResult
-  ) {}
+  private ApiMutation = class ApiMutation<T extends IAxiosArgs> {
+    constructor (
+      public mutation: UseMutationResult,
+    ) {}
 
-  async call (callArgs: ICallArgs, options?: MutateOptions) {
-    return this.mutation.mutate(callArgs, options)
+    async call (axiosArgs: T, options?: MutateOptions) {
+      return this.mutation.mutate(axiosArgs, options)
+    }
   }
 }
 

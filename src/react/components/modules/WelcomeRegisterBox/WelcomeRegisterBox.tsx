@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import styles from './styles'
+import { RegistrationData } from '../../../apis/signon/signup'
 
 const WelcomeRegisterBox = ({
   title,
@@ -39,10 +40,11 @@ const WelcomeRegisterBox = ({
   }
 
   useEffect(() => {
-    document.getElementById('app').addEventListener('keydown', handleEnter)
+    const app = document.getElementById('app') as HTMLElement
+    app.addEventListener('keydown', handleEnter)
 
     return () => {
-      document.getElementById('app').removeEventListener('keydown', handleEnter)
+      app.removeEventListener('keydown', handleEnter)
     }
   }, [])
 
@@ -81,11 +83,6 @@ export default WelcomeRegisterBox
 interface Props {
   onValidRegistration: (registrationData: RegistrationData) => void
   title: string
-}
-
-export interface RegistrationData {
-  email: string,
-  password: string
 }
 
 WelcomeRegisterBox.defaultProps = {

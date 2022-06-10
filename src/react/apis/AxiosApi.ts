@@ -9,13 +9,13 @@ class AxiosApi {
     this.method = method
   }
 
-  async call ({ data, params, config }: ICallArgs) {
+  async call ({ data, params, axiosConfig }: IAxiosArgs) {
     return (await axios({
       method: this.method,
       url: this.url,
       data: data,
       params: params,
-      ...config
+      ...axiosConfig
     })).data
   }
 }
@@ -27,8 +27,8 @@ export interface IAxiosApi {
   url: string
 }
 
-export interface ICallArgs {
-  data?: object | string
+export interface IAxiosArgs {
+  data?: object
   params?: object
-  config?: object
+  axiosConfig?: object
 }
