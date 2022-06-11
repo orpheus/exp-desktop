@@ -1,15 +1,15 @@
-import ApiMutationFactory from '../ApiMutation'
+import makeUseApiMutation from '../ApiMutation'
 import { loginController } from '../../constants/urls'
-import { IAxiosArgs } from '../AxiosApi'
+import { AxiosRequestConfig } from 'axios'
 
-export const loginApiMutation = new ApiMutationFactory<ILoginApi>(
-  { url: loginController, method: 'POST' })
+export const loginApiMutation = makeUseApiMutation<ILoginApi, string>('POST',
+  loginController)
 
-interface ILoginApi extends IAxiosArgs {
-  data: LoginData
+interface ILoginApi extends AxiosRequestConfig {
+  data: ILoginRequest
 }
 
-export interface LoginData {
+export interface ILoginRequest {
   email: string
   password: string
 }

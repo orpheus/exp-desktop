@@ -1,34 +1,34 @@
-import axios from 'axios'
+import axios, { AxiosRequestConfig, Method } from 'axios'
 
-class AxiosApi {
-  url: string
-  method: string
+class AxiosApi<ApiRequestConfig extends AxiosRequestConfig, R> {
+  constructor (
+    public method: Method,
+    public url: string,
+  ) {}
 
-  constructor ({ method, url }: IAxiosApi) {
-    this.url = url
-    this.method = method
-  }
-
-  async call ({ data, params, axiosConfig }: IAxiosArgs) {
+  async call ({
+    data,
+    params,
+    responseType,
+    ...axiosRequestConfig
+  }: ApiRequestConfig): Promise<R> {
     return (await axios({
       method: this.method,
       url: this.url,
       data: data,
       params: params,
-      ...axiosConfig
+      responseType: responseType || 'json',
+      headers: {
+        // Authorization: `Bearer ${window.localStorage.getItem('jwt')}`, // <- or have it on all calls,
+        'content-type': responseType || 'application/json',
+        Accept: responseType || 'application/json',
+        'Cache-Control':
+          'no-cache, no-store, must-revalidate, private, max-age=0',
+        ...axiosRequestConfig.headers
+      },
+      ...axiosRequestConfig,
     })).data
   }
 }
 
 export default AxiosApi
-
-export interface IAxiosApi {
-  method: string,
-  url: string
-}
-
-export interface IAxiosArgs {
-  data?: object
-  params?: object
-  axiosConfig?: object
-}

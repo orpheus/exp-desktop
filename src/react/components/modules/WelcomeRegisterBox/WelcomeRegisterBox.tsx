@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import styles from './styles'
-import { RegistrationData } from '../../../apis/signon/signup'
+import {
+  IRegistrationData,
+} from '../../../apis/signon/signup'
 
 const WelcomeRegisterBox = ({
   title,
-  onValidRegistration
+  onValidRegistration,
 }: Props) => {
   const c = styles()
 
@@ -25,19 +27,19 @@ const WelcomeRegisterBox = ({
     return true
   }
 
-  async function handleEnter (e: KeyboardEvent) {
-    if (e.key === 'Enter') {
-      await handleRegister()
-    }
-  }
-
-  async function handleRegister () {
+  const handleRegister = useCallback(async () => {
     if (!validateInput()) {
       // TODO: Error message or animation
       return
     }
     await onValidRegistration({ email, password })
-  }
+  }, [email, onValidRegistration, password])
+
+  const handleEnter = useCallback(async (e: KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      await handleRegister()
+    }
+  }, [handleRegister])
 
   useEffect(() => {
     const app = document.getElementById('app') as HTMLElement
@@ -46,7 +48,7 @@ const WelcomeRegisterBox = ({
     return () => {
       app.removeEventListener('keydown', handleEnter)
     }
-  }, [])
+  }, [handleEnter])
 
   useEffect(() => {
     const valid = Boolean(email && password)
@@ -60,11 +62,13 @@ const WelcomeRegisterBox = ({
       </h3>
       <div className={c.inputBoxContainer}>
         <label className={c.inputLabel}>email: </label>
-        <input className={c.input} type={'input'} onChange={handleEmailChange} value={email}/>
+        <input className={c.input} type={'input'} onChange={handleEmailChange}
+               value={email}/>
       </div>
       <div className={c.inputBoxContainer}>
         <label className={c.inputLabel}>password: </label>
-        <input className={c.input} type={'password'} onChange={handlePassChange} value={password}/>
+        <input className={c.input} type={'password'} onChange={handlePassChange}
+               value={password}/>
       </div>
       {validInput &&
         <div className={c.inputBoxContainer}>
@@ -81,12 +85,12 @@ const WelcomeRegisterBox = ({
 export default WelcomeRegisterBox
 
 interface Props {
-  onValidRegistration: (registrationData: RegistrationData) => void
+  onValidRegistration: (registrationData: IRegistrationData) => void
   title: string
 }
 
 WelcomeRegisterBox.defaultProps = {
-  title: 'WELCOME TO EXP'
+  title: 'WELCOME TO EXP',
 }
 
 
