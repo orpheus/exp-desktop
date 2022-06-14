@@ -1,4 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
+
+import hologlobe from '../../../../../public/assets/blender/hologlobe.mp4'
+
 import styles from './styles'
 import {
   IRegistrationData,
@@ -57,6 +60,12 @@ const WelcomeRegisterBox = ({
 
   return <div className={c.root}>
     <div className={c.container}>
+      <video
+        autoPlay={true}
+        loop={true}
+        src={hologlobe}
+        className={c.hologlobe}
+      />
       <h3 className={c.boxTitle}>
         {title}
       </h3>

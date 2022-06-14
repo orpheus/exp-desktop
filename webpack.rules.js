@@ -1,3 +1,6 @@
+const path = require('path')
+const config = require('config')
+
 module.exports = [
   // Add support for native node modules
   {
@@ -26,4 +29,11 @@ module.exports = [
       },
     },
   },
+  {
+    test: /\.mp4$/,
+    type: 'asset/resource',
+    generator: {
+      filename: 'public/[hash][ext][query]'
+    }
+  }
 ];

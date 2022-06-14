@@ -12,7 +12,7 @@ export default createUseStyles(theme => {
       width: '100%',
       // border: `11px ${primary} double`,
       top: '50%',
-      transform: 'translateY(-50%)',
+      transform: 'translateY(-90%)',
       boxSizing: 'border-box',
       display: 'flex',
       alignItems: 'center',
@@ -58,6 +58,8 @@ export default createUseStyles(theme => {
       from: { background: primary, color: background },
       to: { background: background, color: primary }
     },
-
+    hologlobe: {
+      width: 200
+    }
   }
 }, { name: 'WelcomeRegisterBox-styles' })
