@@ -1,14 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react'
 
-import hologlobe from '../../../../../public/assets/blender/hologlobe.mp4'
-
 import styles from './styles'
-import {
-  IRegistrationData,
-} from '../../../apis/signon/signup'
+import { IRegistrationData } from '../../../apis/signon/signup'
 
-const WelcomeRegisterBox = ({
-  title,
+const CredentialBox = ({
   onValidRegistration,
 }: Props) => {
   const c = styles()
@@ -60,15 +55,6 @@ const WelcomeRegisterBox = ({
 
   return <div className={c.root}>
     <div className={c.container}>
-      <video
-        autoPlay={true}
-        loop={true}
-        src={hologlobe}
-        className={c.hologlobe}
-      />
-      <h3 className={c.boxTitle}>
-        {title}
-      </h3>
       <div className={c.inputBoxContainer}>
         <label className={c.inputLabel}>email: </label>
         <input className={c.input} type={'input'} onChange={handleEmailChange}
@@ -79,26 +65,19 @@ const WelcomeRegisterBox = ({
         <input className={c.input} type={'password'} onChange={handlePassChange}
                value={password}/>
       </div>
-      {validInput &&
-        <div className={c.inputBoxContainer}>
-          <button className={c.submitButton} onClick={handleRegister}>
-            SUBMIT
-          </button>
-        </div>
-      }
     </div>
 
   </div>
 }
 
-export default WelcomeRegisterBox
+export default CredentialBox
 
 interface Props {
   onValidRegistration: (registrationData: IRegistrationData) => void
   title: string
 }
 
-WelcomeRegisterBox.defaultProps = {
+CredentialBox.defaultProps = {
   title: 'WELCOME TO EXP',
 }
 

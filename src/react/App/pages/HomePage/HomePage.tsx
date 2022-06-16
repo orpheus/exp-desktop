@@ -4,8 +4,8 @@ import {
   IRegistrationData,
   useSignUpMutation,
 } from '../../../apis/signon/signup'
-import WelcomeRegisterBox
-  from '../../../components/modules/WelcomeRegisterBox/WelcomeRegisterBox'
+import CredentialBox
+  from '../../../components/modules/CredentialBox/CredentialBox'
 
 const HomePage = () => {
   const c = styles()
@@ -23,7 +23,7 @@ const HomePage = () => {
   }
 
   return <div className={c.root}>
-    <WelcomeRegisterBox onValidRegistration={registerNewUser}/>
+    <CredentialBox onValidRegistration={registerNewUser}/>
 
   </div>
 }
