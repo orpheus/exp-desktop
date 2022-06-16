@@ -8,11 +8,14 @@ import React, {
 import jwtDecode from 'jwt-decode'
 import usePageTimeout, { minutes } from '../hooks/usePageTimeout'
 import { IJwtDecoded } from '../apis/signon/login'
-import * as stream from 'stream'
 
-export const LoginAuthCtx = React.createContext({})
-export const useLoginAuth = () => {
-  const ctx = useContext(LoginAuthCtx)
+export const AuthCtx = React.createContext<IAuthState>({
+  accessToken: '',
+  authorized: false,
+  user: undefined,
+})
+export const useAuth = (): IAuthState => {
+  const ctx = useContext(AuthCtx)
   if (!ctx) {
     throw new Error('useLoginAuth must be used within a LoginAuthProvider')
   }
@@ -21,7 +24,7 @@ export const useLoginAuth = () => {
 
 const STORAGE_KEY = '__loginAuth'
 
-export const initialState: ILoginAuthState = {
+export const initialState: IAuthState = {
   accessToken: '',
   authorized: false,
   user: undefined,
@@ -33,7 +36,7 @@ export const initialState: ILoginAuthState = {
  * Handles state/user persistence on page re-locations.
  * Initiates a page timeout and logout
  */
-export default function LoginAuthProvider ({ children }: ProviderProps) {
+export default function AuthProvider ({ children }: ProviderProps) {
   const [state, setState] = useState(initialState)
   const authorized = useMemo(() => isAuthorized(state), [state])
   const [cacheCleanup, setCacheCleanup] = useState({ time: 0 })
@@ -106,12 +109,12 @@ export default function LoginAuthProvider ({ children }: ProviderProps) {
     }
   }, [authorized, logout])
 
-  const setLoginData = useCallback((state: ILoginAuthState) => {
+  const setLoginData = useCallback((state: IAuthState) => {
     setState(state)
   }, [])
 
   const authorize = useCallback((authorized: boolean) => {
-    setState((state: ILoginAuthState) => {
+    setState((state: IAuthState) => {
       return {
         ...state,
         authorized,
@@ -135,18 +138,18 @@ export default function LoginAuthProvider ({ children }: ProviderProps) {
     cacheLoginState,
   }), [state, setLoginData, authorize, authorized, logout, cacheLoginState])
 
-  return <LoginAuthCtx.Provider value={contextValue}>
+  return <AuthCtx.Provider value={contextValue}>
     {children}
-  </LoginAuthCtx.Provider>
+  </AuthCtx.Provider>
 }
 
-function setStateToStorage (state: ILoginAuthState) {
+function setStateToStorage (state: IAuthState) {
   window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state))
   // for request-wrapper
-  window.localStorage.setItem('jwt', state.accessToken)
+  window.localStorage.setItem('jwt', state.accessToken || '')
 }
 
-function getStateFromStorage (): ILoginAuthState | null {
+function getStateFromStorage (): IAuthState | null {
   const storage = window.localStorage.getItem(STORAGE_KEY)
   if (!storage) {
     return null
@@ -175,15 +178,17 @@ function jwtIsExpired (token: AccessToken) {
   }
 }
 
-function isAuthorized (state: ILoginAuthState) {
+function isAuthorized (state: IAuthState) {
   // check state first
-  if (state.authorized) {
+  if (state.authorized && state.accessToken) {
     return !jwtIsExpired(state.accessToken)
   }
   // if no state, check localStorage for cached state
   const storage = getStateFromStorage()
-  if (storage && storage.authorized) {
+  if (storage) {
+    if (storage.accessToken) {
       return !jwtIsExpired(storage.accessToken)
+    }
   }
   // return false by default
   return false
@@ -199,8 +204,8 @@ export const storeJWT = (token: AccessToken) => {
 
 type AccessToken = string
 
-interface ILoginAuthState {
-  accessToken: AccessToken
+interface IAuthState {
+  accessToken?: AccessToken
   authorized: boolean
   user?: object
 }

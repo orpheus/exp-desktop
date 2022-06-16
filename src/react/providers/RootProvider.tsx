@@ -2,14 +2,14 @@ import React, { Suspense, ReactElement } from 'react'
 import ExpThemeProvider from './ThemeProvider'
 import ReactQueryProvider from './ReactQueryProvider'
 import ReactRouterProvider from './ReactRouterProvider'
-import LoginAuthProvider from './LoginAuthProvider'
+import AuthProvider from './AuthProvider'
 
 
 const Providers: IProviders = [
-  ReactQueryProvider,
   ReactRouterProvider,
-  ExpThemeProvider,
-  LoginAuthProvider
+  AuthProvider,
+  ReactQueryProvider,
+  ExpThemeProvider
 ]
 
 const AllProviders = ({ Providers, children }: AllProvidersProps) => {
