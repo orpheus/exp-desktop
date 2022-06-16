@@ -8,6 +8,7 @@ import React, {
 import jwtDecode from 'jwt-decode'
 import usePageTimeout, { minutes } from '../hooks/usePageTimeout'
 import { IJwtDecoded } from '../apis/signon/login'
+import * as stream from 'stream'
 
 export const LoginAuthCtx = React.createContext({})
 export const useLoginAuth = () => {
@@ -145,10 +146,10 @@ function setStateToStorage (state: ILoginAuthState) {
   window.localStorage.setItem('jwt', state.accessToken)
 }
 
-function getStateFromStorage (): ILoginAuthState {
+function getStateFromStorage (): ILoginAuthState | null {
   const storage = window.localStorage.getItem(STORAGE_KEY)
   if (!storage) {
-    throw Error('Could not find login state storage in localStorage')
+    return null
   }
   return JSON.parse(storage)
 }
@@ -180,8 +181,9 @@ function isAuthorized (state: ILoginAuthState) {
     return !jwtIsExpired(state.accessToken)
   }
   // if no state, check localStorage for cached state
-  if (getStateFromStorage()?.authorized) {
-    return !jwtIsExpired(getStateFromStorage().accessToken)
+  const storage = getStateFromStorage()
+  if (storage && storage.authorized) {
+      return !jwtIsExpired(storage.accessToken)
   }
   // return false by default
   return false
