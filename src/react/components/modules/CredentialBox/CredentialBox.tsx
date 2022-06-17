@@ -30,7 +30,7 @@ const CredentialBox = ({
       // TODO: Error message or animation
       return
     }
-    await onValidRegistration({ email, password })
+    await onValidRegistration({ email, password, username: 'fake' })
   }, [email, onValidRegistration, password])
 
   const handleEnter = useCallback(async (e: KeyboardEvent) => {

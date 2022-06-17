@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import React, { ReactNode } from 'react'
 import styles from './styles'
 
 const FlexCenter = ({ children, flexDirection }: Props) => {
@@ -15,7 +15,7 @@ FlexCenter.defaultProps = {
 }
 
 interface Props {
-  children: ReactElement | ReactElement[]
+  children: ReactNode
   flexDirection: 'row' | 'row-reverse' | 'column' | 'column-reverse'
 }
 
