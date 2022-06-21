@@ -2,7 +2,7 @@ import React, { Suspense, ReactElement } from 'react'
 import ExpThemeProvider from './ThemeProvider'
 import ReactQueryProvider from './ReactQueryProvider'
 import ReactRouterProvider from './ReactRouterProvider'
-import AuthProvider from './AuthProvider'
+import AuthProvider from './AuthProvider/AuthProvider'
 
 
 const Providers: IProviders = [
