@@ -4,3 +4,4 @@ const api = `${url}/api`
 
 export const signUpController = `${api}/signup`
 export const loginController = `${api}/login`
+export const permissionsController = `${api}/permissions`

@@ -3,12 +3,14 @@ import ExpThemeProvider from './ThemeProvider'
 import ReactQueryProvider from './ReactQueryProvider'
 import ReactRouterProvider from './ReactRouterProvider'
 import AuthProvider from './AuthProvider/AuthProvider'
+import PermissionProvider from './PermissionProvider/PermissionProvider'
 
 
 const Providers: IProviders = [
   ReactRouterProvider,
   AuthProvider,
   ReactQueryProvider,
+  PermissionProvider,
   ExpThemeProvider
 ]
 

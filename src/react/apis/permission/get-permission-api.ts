@@ -1,3 +1,10 @@
-import AxiosApi from "../AxiosApi";
+import AxiosApi from '../AxiosApi'
+import { permissionsController } from '../../constants/urls'
+import { AxiosRequestConfig } from 'axios'
 
-// const getPermissionApi = AxiosApi('GET', '')
+export const getPermissionApi = new AxiosApi<AxiosRequestConfig, TPermissions>('GET',
+  permissionsController)
+
+type TPermissions = string[]
+
+

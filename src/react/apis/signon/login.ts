@@ -29,3 +29,22 @@ export interface IJwtDecoded {
   iat: number
   iss: string
 }
+
+export interface IUser {
+  id: string
+  username: string
+  email: string
+  role: IRole
+  accessToken: string
+}
+
+export interface IRole {
+  id: string
+  name: string
+  permissions: IPermission[]
+}
+
+export interface IPermission {
+  id: string
+  dateCreated: string
+}

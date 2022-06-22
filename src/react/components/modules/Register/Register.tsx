@@ -77,7 +77,7 @@ function Register ({
     {/*<Button*/}
     {/*  style={style}*/}
     {/*  className={c.button}*/}
-    {/*  handleOnClick={() => null}*/}
+    {/*  handleOnClick={handleBack}*/}
     {/*  text={'Back'}*/}
     {/*  color={'#fff'}*/}
     {/*/>*/}

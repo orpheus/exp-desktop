@@ -1,54 +1,46 @@
-import React, {createContext, useEffect, useState, useContext} from 'react'
-import {useQuery} from 'react-query'
-import {useAuth} from "../AuthProvider/AuthProvider";
-import hasPermission from "./hasPermission";
+import React, { createContext, useEffect, useState, useContext } from 'react'
+import { useQuery } from 'react-query'
+import { useAuth } from '../AuthProvider/AuthProvider'
+import { hasPermission } from './hasPermission'
+import { getPermissionApi } from '../../apis/permission/get-permission-api'
+import { IPermission } from '../../apis/signon/login'
 
-export const PermissionsCtx = createContext(undefined)
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const defaultPermissionFn = (permission: string) => false
+export const PermissionsCtx = createContext(defaultPermissionFn)
 export const useHasPermission = () => useContext(PermissionsCtx)
 
-const PermissionsProvider = ({children}: ProviderProps) => {
-    const [checkPermissions, setCheckPermissions] = useState(() => {
-        return () => {
-            return false
-        }
-    })
-    const {authState} = useAuth()
-    const user = authState?.user
+const PermissionsProvider = ({ children }: ProviderProps) => {
+  const [checkPermissions, setCheckPermissions] = useState(() => {
+    return defaultPermissionFn
+  })
+  const { authState } = useAuth()
+  const user = authState?.user
 
-    // currently we only use permissions in the admin view
-    // to display when selecting permissions during role creation/modification
-    // no need as of now to provider permissions to ctx provider
-    // as would call for a memoization.
-    // can easily just get permissions using react-query's cache
-    // queryCache.getCacheData('permissions')
-    useQuery('permissions', getPermissionsApi, {
-        enabled: user && authState.authorized,
-        refetchOnWindowFocus: false
-    })
+  useQuery('permissions', getPermissionApi.call.bind(getPermissionApi), {
+    enabled: user && authState.authorized,
+    refetchOnWindowFocus: false,
+  })
 
-    // Each time the user updates
-    useEffect(() => {
-        if (user !== undefined) {
-            let permissions: string[] = []
+  // Each time the user updates
+  useEffect(() => {
+    if (user !== undefined) {
+      const permissions = user.role.permissions.map(p => p.id)
 
-            console.log('user', user)
-            permissions = user.role?.permissions
+      const checkPermission = (permission: string) => {
+        return hasPermission(permissions, permission)
+      }
+      setCheckPermissions(() => checkPermission)
+    }
+  }, [user])
 
-            const checkPermission = (permission: string) => {
-                return hasPermission(permissions, permission)
-            }
-            setCheckPermissions(() => checkPermission)
-        }
-    }, [user])
-
-    return <PermissionsCtx.Provider value={checkPermissions}>
-        {children}
-    </PermissionsCtx.Provider>
+  return <PermissionsCtx.Provider value={checkPermissions}>
+    {children}
+  </PermissionsCtx.Provider>
 }
 
-
 interface ProviderProps {
-    children?: React.ReactElement[] | React.ReactElement
+  children?: React.ReactElement[] | React.ReactElement
 }
 
 export default PermissionsProvider
