@@ -6,7 +6,10 @@ import { useAuth } from '../../../providers/AuthProvider/AuthProvider'
 import FlexCenter from '../../../components/library/FlexCenter/FlexCenter'
 import Button from '../../../components/library/Button/Button'
 import Register from '../../../components/modules/Register/Register'
+import Login from '../../../components/modules/Login/Login'
 
+const login = 'login'
+const register = 'register'
 type SignOnOption = 'login' | 'register' | null
 
 const SignOnPage = () => {
@@ -21,9 +24,9 @@ const SignOnPage = () => {
     }
     return <>
       <Button className={c.button} text={'Login'}
-              handleOnClick={() => setSignOnOption('login')}/>
+              handleOnClick={() => setSignOnOption(login)}/>
       <Button className={c.button} text={'Create Account'}
-              handleOnClick={() => setSignOnOption('register')}/>
+              handleOnClick={() => setSignOnOption(register)}/>
     </>
   }
 
@@ -34,7 +37,12 @@ const SignOnPage = () => {
         topHeaderComp={<HoloGlobe width={200}/>}
       />
       <SignOnButtons/>
-      {signOnOption == 'register' &&
+      {signOnOption == login &&
+        <Login
+          backout={() => setSignOnOption(null)}
+        />
+      }
+      {signOnOption == register &&
         <Register
           backout={() => setSignOnOption(null)}
         />

@@ -3,6 +3,7 @@ import Button from '../../library/Button/Button'
 import React, { useState } from 'react'
 import styles from './styles'
 import { useSignUpMutation } from '../../../apis/signon/signup'
+import { useAuth } from '../../../providers/AuthProvider/AuthProvider'
 
 const style = {
   width: 200,
@@ -13,6 +14,7 @@ function Register ({
   backout,
 }: Props) {
   const c = styles()
+  const auth = useAuth()
 
   const signUpMutation = useSignUpMutation()
 
@@ -23,7 +25,12 @@ function Register ({
 
   async function handleOnRegister () {
     await signUpMutation.mutate({
-      data: { email, password, username },
+      data: {
+        email,
+        password,
+        username,
+        roleName: 'admin'
+      },
     }, {
       onSuccess: async data => null,
       onError: async error => null,
@@ -70,17 +77,17 @@ function Register ({
       <Button
         style={{...style, marginTop: 15}}
         className={c.button}
-        handleOnClick={() => null}
+        handleOnClick={handleOnRegister}
         text={'Register'}
         disabled={!validRegistration}
       />
-    {/*<Button*/}
-    {/*  style={style}*/}
-    {/*  className={c.button}*/}
-    {/*  handleOnClick={handleBack}*/}
-    {/*  text={'Back'}*/}
-    {/*  color={'#fff'}*/}
-    {/*/>*/}
+    <Button
+      style={style}
+      className={c.button}
+      handleOnClick={handleBack}
+      text={'Back'}
+      color={'#fff'}
+    />
   </>
 }
 

@@ -1,6 +1,6 @@
 import React, {
   HTMLInputTypeAttribute,
-  InputHTMLAttributes,
+  InputHTMLAttributes, Key, useCallback,
   useEffect,
   useState,
 } from 'react'
@@ -17,7 +17,8 @@ const TextInput = ({
   style,
   type,
   inputProps,
-  inputClass
+  inputClass,
+  onEnter
 }: Props) => {
   const c = styles()
 
@@ -27,6 +28,12 @@ const TextInput = ({
 
   function handleOnBlur (e: React.FocusEvent<HTMLInputElement>) {
     onBlur && onBlur(e.target.value)
+  }
+
+  function handleOnKeyUp (e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key === 'Enter') {
+      onEnter && onEnter()
+    }
   }
 
   return <div className={c.root}>
@@ -40,6 +47,7 @@ const TextInput = ({
       value={value}
       onChange={handleOnChange}
       onBlur={handleOnBlur}
+      onKeyUp={handleOnKeyUp}
       className={clsx(c.input, inputClass)}
       placeholder={placeholder}
       {...inputProps}
@@ -55,6 +63,7 @@ export default TextInput
 interface Props {
   onBlur?: (value: string) => void
   onChange: (value: string) => void
+  onEnter?: () => void
   value: string
   errorMessage?: string
   placeholder?: string

@@ -10,7 +10,8 @@ interface ISignUpApi extends AxiosRequestConfig {
 }
 
 export interface IRegistrationData {
-  email: string,
-  username: string,
+  email: string
+  username: string
   password: string
+  roleName: string
 }

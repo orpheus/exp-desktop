@@ -2,25 +2,13 @@ import makeUseApiMutation from '../ApiMutation'
 import { loginController } from '../../constants/urls'
 import { AxiosRequestConfig } from 'axios'
 
-export const loginApiMutation = makeUseApiMutation<ILoginApi, ILoginResponse>('POST',
+export const useLoginMutation = makeUseApiMutation<ILoginApi, ILoginResponse>(
+  'POST',
   loginController)
 
-interface ILoginApi extends AxiosRequestConfig {
-  data: ILoginRequest
-}
+type ILoginApi = AxiosRequestConfig
 
-export interface ILoginRequest {
-  email: string
-  password: string
-}
-
-export interface ILoginResponse {
-  id: string
-  username: string
-  email: string
-  roleId: string
-  accessToken: string
-}
+export type ILoginResponse = IUser
 
 export interface IJwtDecoded {
   userId: string
