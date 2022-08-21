@@ -5,27 +5,23 @@ import React, {
   useMemo,
   useState,
 } from 'react'
-import jwtDecode from 'jwt-decode'
 import usePageTimeout, { minutes } from '../../hooks/usePageTimeout'
-import { IJwtDecoded, IUser } from '../../apis/signon/login'
-import {
-  clearStorage,
-  isAuthorized,
-  setStateToStorage,
-  STORAGE_KEY,
-} from './authHelpers'
+import { IUser } from '../../apis/signon/login'
+import { clearStorage, isAuthorized, setStateToStorage } from './authHelpers'
+
+export interface IAuthState {
+  authUser?: IUser
+}
 
 export const initialAuthState: IAuthState = {
-  accessToken: '',
-  authorized: false,
-  user: undefined,
+  authUser: undefined,
 }
 
 export const AuthCtx = React.createContext<IAuthCtxPayload>({
   authState: initialAuthState,
-  authorize: () => null,
+  authorized: false,
   logout: () => null,
-  setLoginData: () => null,
+  authorizeUser: () => null,
   cacheLoginState: () => null,
 })
 
@@ -44,31 +40,18 @@ export const useAuth = (): IAuthCtxPayload => {
  * Initiates a page timeout and logout
  */
 export default function AuthProvider ({ children }: ProviderProps) {
+  // The Auth User
   const [authState, setAuthState] = useState<IAuthState>(initialAuthState)
-  const authorized = useMemo<boolean>(() => isAuthorized(authState),
+  // Whether that User has valid access
+  const authorized = useMemo<boolean>(
+    () => isAuthorized(authState.authUser?.accessToken),
     [authState])
+  // Cache cleanup timer
   const [cacheCleanup, setCacheCleanup] = useState({ time: 0 })
-
-  const authorize = useCallback((isAuthorized: boolean) => {
-    setAuthState((state: IAuthState) => {
-      return {
-        ...state,
-        authorized: isAuthorized,
-      }
-    })
-  }, [])
-
-  /**
-   * The `authorized` memo variable will check the validity of the accessToken in the `authState`
-   * as well as its basic existence. This hook will watch for changes in the `authorized` variable
-   * and update the `authState` accordingly
-   */
-  useEffect(() => {
-    authorize(authorized)
-  }, [authorize, authorized])
 
   const cacheLoginState = useCallback(() => {
     // set the state to localStorage and mark this current tab as 'caching'
+    console.log('Caching login state...')
     setStateToStorage(authState)
     // cleanup cache in a minute
     setCacheCleanup({ time: 60 * 1000 })
@@ -79,10 +62,7 @@ export default function AuthProvider ({ children }: ProviderProps) {
    */
   useEffect(() => {
     function handler () {
-      if (localStorage.getItem(STORAGE_KEY)) {
-        console.log('Cleanup user cache.')
-        localStorage.removeItem(STORAGE_KEY)
-      }
+      clearStorage()
     }
 
     if (cacheCleanup.time > 0) {
@@ -137,24 +117,26 @@ export default function AuthProvider ({ children }: ProviderProps) {
     }
   }, [authorized, logout])
 
-  const setLoginData = useCallback((authState: IAuthState) => {
-    setAuthState(authState)
+  const authorizeUser = useCallback((user: IUser) => {
+    setAuthState({
+      authUser: user,
+    })
   }, [])
 
   usePageTimeout({
       logout,
-      activate: Boolean(authState.user),
+      activate: Boolean(authState.authUser),
       duration: minutes(60),
     },
   )
 
   const contextValue = useMemo(() => ({
     authState,
-    setLoginData,
-    authorize,
+    authorizeUser,
+    authorized,
     logout,
     cacheLoginState,
-  }), [authState, setLoginData, authorize, logout, cacheLoginState])
+  }), [authState, authorized, authorizeUser, logout, cacheLoginState])
 
   return <AuthCtx.Provider value={contextValue}>
     {children}
@@ -165,16 +147,10 @@ export type AccessToken = string
 
 export interface IAuthCtxPayload {
   authState: IAuthState
-  setLoginData: (authState: IAuthState) => void
-  authorize: (isAuthorized: boolean) => void
+  authorizeUser: (user: IUser) => void
+  authorized: boolean
   logout: () => void
   cacheLoginState: () => void
-}
-
-export interface IAuthState {
-  accessToken?: AccessToken
-  authorized: boolean
-  user?: IUser
 }
 
 interface ProviderProps {

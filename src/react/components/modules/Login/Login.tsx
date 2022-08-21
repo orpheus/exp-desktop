@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import styles from './styles'
 import { useAuth } from '../../../providers/AuthProvider/AuthProvider'
 import { ILoginResponse, useLoginMutation } from '../../../apis/signon/login'
+import { storeJWT } from '../../../providers/AuthProvider/authHelpers'
 
 const style = {
   width: 200,
@@ -12,6 +13,7 @@ const style = {
 
 function Login ({
   backout,
+  onLogin
 }: Props) {
   const c = styles()
   const auth = useAuth()
@@ -28,12 +30,9 @@ function Login ({
         password
       }
     }, {
-      onSuccess: async (data: ILoginResponse) => {
-        auth.setLoginData({
-          authorized: true,
-          accessToken: data['accessToken'],
-          user: data
-        })
+      onSuccess: async (user: ILoginResponse) => {
+        auth.authorizeUser(user)
+        onLogin()
       },
       onError: async error => null,
     })
@@ -83,4 +82,5 @@ export default Login
 
 interface Props {
   backout: () => void
+  onLogin: () => void
 }

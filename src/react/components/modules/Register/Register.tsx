@@ -12,6 +12,7 @@ const style = {
 
 function Register ({
   backout,
+  onRegister,
 }: Props) {
   const c = styles()
   const auth = useAuth()
@@ -29,58 +30,61 @@ function Register ({
         email,
         password,
         username,
-        roleName: 'admin'
-      },
+        roleName: 'admin',
+      }
     }, {
-      onSuccess: async data => null,
+      onSuccess: async () => {
+        onRegister()
+      },
       onError: async error => null,
     })
   }
 
   function handleBack () {
-      backout()
+    backout()
   }
 
-  const validRegistration = email && password && (password === confirmedPassword) && username
+  const validRegistration = email && password &&
+    (password === confirmedPassword) && username
 
   return <>
-      <TextInput
-        style={style}
-        onChange={(v) => setEmail(v)}
-        label={'Email'}
-        value={email}
-        inputClass={c.inputClass}
-      />
-      <TextInput
-        type={'password'}
-        style={style}
-        onChange={(v) => setPassword(v)}
-        label={'Password'}
-        value={password}
-        inputClass={c.inputClass}
-      />
-      <TextInput
-        type={'password'}
-        style={style}
-        onChange={(v) => setConfirmedPassword(v)}
-        label={'Confirm Password'}
-        value={confirmedPassword}
-        inputClass={c.inputClass}
-      />
-      <TextInput
-        style={style}
-        onChange={(v) => setUsername(v)}
-        label={'Username'}
-        value={username}
-        inputClass={c.inputClass}
-      />
-      <Button
-        style={{...style, marginTop: 15}}
-        className={c.button}
-        handleOnClick={handleOnRegister}
-        text={'Register'}
-        disabled={!validRegistration}
-      />
+    <TextInput
+      style={style}
+      onChange={(v) => setEmail(v)}
+      label={'Email'}
+      value={email}
+      inputClass={c.inputClass}
+    />
+    <TextInput
+      type={'password'}
+      style={style}
+      onChange={(v) => setPassword(v)}
+      label={'Password'}
+      value={password}
+      inputClass={c.inputClass}
+    />
+    <TextInput
+      type={'password'}
+      style={style}
+      onChange={(v) => setConfirmedPassword(v)}
+      label={'Confirm Password'}
+      value={confirmedPassword}
+      inputClass={c.inputClass}
+    />
+    <TextInput
+      style={style}
+      onChange={(v) => setUsername(v)}
+      label={'Username'}
+      value={username}
+      inputClass={c.inputClass}
+    />
+    <Button
+      style={{ ...style, marginTop: 15 }}
+      className={c.button}
+      handleOnClick={handleOnRegister}
+      text={'Register'}
+      disabled={!validRegistration}
+    />
     <Button
       style={style}
       className={c.button}
@@ -95,4 +99,5 @@ export default Register
 
 interface Props {
   backout: () => void
+  onRegister: () => void
 }

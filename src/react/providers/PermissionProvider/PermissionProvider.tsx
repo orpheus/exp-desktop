@@ -14,11 +14,11 @@ const PermissionsProvider = ({ children }: ProviderProps) => {
   const [checkPermissions, setCheckPermissions] = useState(() => {
     return defaultPermissionFn
   })
-  const { authState } = useAuth()
-  const user = authState?.user
+  const { authState, authorized } = useAuth()
+  const user = authState?.authUser
 
   useQuery('permissions', getPermissionApi.call.bind(getPermissionApi), {
-    enabled: user && authState.authorized,
+    enabled: user && authorized,
     refetchOnWindowFocus: false,
   })
 

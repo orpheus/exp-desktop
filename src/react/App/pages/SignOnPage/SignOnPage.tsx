@@ -7,6 +7,7 @@ import FlexCenter from '../../../components/library/FlexCenter/FlexCenter'
 import Button from '../../../components/library/Button/Button'
 import Register from '../../../components/modules/Register/Register'
 import Login from '../../../components/modules/Login/Login'
+import { useNavigate } from 'react-router-dom'
 
 const login = 'login'
 const register = 'register'
@@ -15,6 +16,7 @@ type SignOnOption = 'login' | 'register' | null
 const SignOnPage = () => {
   const c = styles()
   const auth = useAuth()
+  const navigate = useNavigate();
 
   const [signOnOption, setSignOnOption] = useState<SignOnOption>(null)
 
@@ -30,6 +32,10 @@ const SignOnPage = () => {
     </>
   }
 
+  function navigateUserToHome() {
+    navigate('/')
+  }
+
   return <div className={c.root}>
     <FlexCenter>
       <TitleLogo
@@ -40,11 +46,13 @@ const SignOnPage = () => {
       {signOnOption == login &&
         <Login
           backout={() => setSignOnOption(null)}
+          onLogin={navigateUserToHome}
         />
       }
       {signOnOption == register &&
         <Register
           backout={() => setSignOnOption(null)}
+          onRegister={navigateUserToHome}
         />
       }
     </FlexCenter>

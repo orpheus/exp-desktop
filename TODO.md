@@ -1,6 +1,11 @@
 # TODO
 All TODOs will be noted in this document.
 
+- Add a Skill
+- See current EXP for Skill
+- Add TXP to a skill
+- Hire a UI Designer (Responsive Web & Mobile)
+
 ## 2022-06-05
 
 ### [App]
